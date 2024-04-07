@@ -120,17 +120,25 @@ int main(int argc, char **argv) {
   // assign means to be the first k points
   // initialize counts to 0
   double means[KMEANS][DIM];
-  size_t counts[KMEANS];
   for (int i = 0; i < KMEANS; ++i) {
-    counts[i] = 0;
     for (int j = 0; j < DIM; ++j) {
       means[i][j] = dataset[i][j];
     }
   }
   
   // compare all locations
-  int points[KMEANS][N];
+  double sums[KMEANS][DIM];
+  size_t counts[KMEANS];
+
   for (int iteration = 0; iteration < 10; ++iteration) {
+    // init counts and sums to zero
+    for (size_t ctr = 0; ctr < KMEANS; ++ctr) {
+      counts[ctr] = 0;
+      for (size_t dim = 0; dim < DIM; ++dim) {
+        sums[ctr][dim] = 0;
+      }
+    }
+
     for (size_t i = local_ranges[0]; i < local_ranges[1]; ++i) {
       int closest = 0;
       double curr_distance = edist(means[0], dataset[i], DIM);
@@ -141,21 +149,41 @@ int main(int argc, char **argv) {
             curr_distance = tmp_distance;
         }
       }
-      points[closest][counts[closest]] = i;
+      for (int d = 0; d < DIM; ++d) {
+        sums[closest][d] += dataset[i][d];
+      }
       ++counts[closest];
     }
 
+    // print centroids
     if (my_rank == 0) {
-        // output plot
+        printf("%d: ", iteration);
+        for(int i = 0; i < KMEANS; ++i) {
+          for(int d = 0; d < DIM - 1; ++d) {
+            printf("%d, ", means[i][d]);
+          }
+          printf("%d\n", means[i][DIM - 1]);
+        }
     }
+    // allreduce
+    // get total sum of counts
+    size_t total_counts[KMEANS];
+    double total_sums[KMEANS][DIM];
 
-    // adjust means
+    // all reduce to get total counts
+    MPI_Allreduce(counts, total_counts, KMEANS, MPI_UNSIGNED_LONG, MPI_SUM, MPI_COMM_WORLD);
+
+    // get all means sums
+    MPI_Allreduce(sums, total_sums, KMEANS * DIM, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
     for (int n = 0; n < KMEANS; ++n) {
-      if(counts[n] > 0) {
+      if(total_counts[n] > 0) {
         // iterate through points and average them all this should be done at rank zero only for all points
-        double centroid[DIM];
-        
+        for (size_t i = 0; i < KMEANS; ++i) {
+          for (size_t d = 0; d < DIM; ++d) {
+            means[i][d] = total_sums[i][d] / total_counts[i];
+          }
+        }
       } else {
         // this means there are no closest point, so the centroid is reset to zero
         for (int i = 0; i < DIM; ++i) {
