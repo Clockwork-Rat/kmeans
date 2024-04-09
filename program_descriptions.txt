@@ -1,2 +1,13 @@
 
 I made no assumptions about the dimensionality of the data so that this could be done on a dataset of any dimensionality.
+
+Kmeans overview:
+
+The kmeans algorithm is a way of finding a number of points representative of a dataset.
+The way this works is by randomly assigning a number of centroids, finding the points closest to these centroids and 
+reassigning the centroids as the means of each of their closest points. This will force that point to be more representative of
+the points closest to it.
+
+My approach to this algorithm was to, rather than sharing all points, to sum all of the dimensions of each of these points and 
+reduce to get the total sums of all of these dimensions with MPI_Allreduce and to do the same with the counts of points for each centroid.
+The new centroids can be found by dividing each dimension by the count at each point.

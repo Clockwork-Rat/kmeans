@@ -91,7 +91,9 @@ int main(int argc, char **argv) {
 
   
   //Write code here
-
+  double stime = MPI_Wtime();
+  double calc_time = 0.0;
+  double sync_time = 0.0;
   // create assignments
 
   size_t all_ranges[nprocs][2];
@@ -138,7 +140,7 @@ int main(int argc, char **argv) {
         sums[ctr][dim] = 0;
       }
     }
-
+    double start_calc = MPI_Wtime();
     for (size_t i = local_ranges[0]; i < local_ranges[1]; ++i) {
       int closest = 0;
       double curr_distance = edist(means[0], dataset[i], DIM);
@@ -154,10 +156,11 @@ int main(int argc, char **argv) {
       }
       ++counts[closest];
     }
+    double end_calc = MPI_Wtime();
 
     // print centroids
     if (my_rank == 0) {
-        printf("%d: ", iteration);
+        printf("k %d, iteration %d: ", KMEANS, iteration);
         for(int i = 0; i < KMEANS; ++i) {
           for(int d = 0; d < DIM - 1; ++d) {
             printf("%d, ", means[i][d]);
@@ -170,6 +173,7 @@ int main(int argc, char **argv) {
     size_t total_counts[KMEANS];
     double total_sums[KMEANS][DIM];
 
+    double start_sync = MPI_Wtime();
     // all reduce to get total counts
     MPI_Allreduce(counts, total_counts, KMEANS, MPI_UNSIGNED_LONG, MPI_SUM, MPI_COMM_WORLD);
 
@@ -191,6 +195,21 @@ int main(int argc, char **argv) {
         }
       }
     }
+    double end_sync = MPI_Wtime();
+
+    sync_time += (end_sync - start_sync);
+    calc_time += (end_calc - start_calc);
+  }
+  double max_calc;
+  double max_sync;
+  MPI_Reduce(&calc_time, &max_calc, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&sync_time, &max_sync, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+
+  double etime = MPI_Wtime();
+  if (my_rank == 0) {
+    printf("%d: Total time: %f\n", KMEANS, etime - stime);
+    printf("%d: Calc time: %f\n",  KMEANS, max_calc);
+    printf("%d: Sync time: %f\n",  KMEANS, max_sync);
   }
 
   //free dataset
