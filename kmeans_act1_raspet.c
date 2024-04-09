@@ -163,9 +163,9 @@ int main(int argc, char **argv) {
         printf("k %d, iteration %d: ", KMEANS, iteration);
         for(int i = 0; i < KMEANS; ++i) {
           for(int d = 0; d < DIM - 1; ++d) {
-            printf("%d, ", means[i][d]);
+            printf("%f, ", means[i][d]);
           }
-          printf("%d\n", means[i][DIM - 1]);
+          printf("%f\n", means[i][DIM - 1]);
         }
     }
     // allreduce
