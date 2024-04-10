@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
   
   // compare all locations
   double sums[KMEANS][DIM];
-  size_t counts[KMEANS];
+  int counts[KMEANS];
 
   for (int iteration = 0; iteration < 10; ++iteration) {
     // init counts and sums to zero
@@ -165,18 +165,18 @@ int main(int argc, char **argv) {
           for(int d = 0; d < (DIM - 1); ++d) {
             printf("%f, ", means[i][d]);
           }
-          printf("%f;", means[i][DIM - 1]);
+          printf("%f; ", means[i][DIM - 1]);
         }
         printf("\n");
     }
     // allreduce
     // get total sum of counts
-    size_t total_counts[KMEANS];
+    int total_counts[KMEANS];
     double total_sums[KMEANS][DIM];
 
     double start_sync = MPI_Wtime();
     // all reduce to get total counts
-    MPI_Allreduce(counts, total_counts, KMEANS, MPI_UNSIGNED_LONG, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(counts, total_counts, KMEANS, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 
     // get all means sums
     MPI_Allreduce(sums, total_sums, KMEANS * DIM, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
@@ -186,13 +186,13 @@ int main(int argc, char **argv) {
         // iterate through points and average them all this should be done at rank zero only for all points
         for (size_t i = 0; i < KMEANS; ++i) {
           for (size_t d = 0; d < DIM; ++d) {
-            means[i][d] = total_sums[i][d] / total_counts[i];
+            means[i][d] = total_sums[i][d] / (double)total_counts[i];
           }
         }
       } else {
         // this means there are no closest point, so the centroid is reset to zero
         for (int i = 0; i < DIM; ++i) {
-          means[n][i] = 0;
+          means[n][i] = 0.0;
         }
       }
     }
