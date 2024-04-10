@@ -162,7 +162,7 @@ int main(int argc, char **argv) {
     if (my_rank == 0) {
         printf("k %d, iteration %d: ", KMEANS, iteration);
         for(int i = 0; i < KMEANS; ++i) {
-          for(int d = 0; d < DIM - 1; ++d) {
+          for(int d = 0; d < (DIM - 1); ++d) {
             printf("%f, ", means[i][d]);
           }
           printf("%f;", means[i][DIM - 1]);

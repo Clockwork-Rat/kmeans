@@ -5,7 +5,7 @@
 #SBATCH --time=100:00
 #SBATCH --mem=100G
 #SBATCH --nodes=1
-#SBATCH --ntasks=1
+#SBATCH --ntasks=4
 #SBATCH --cpus-per-task=1
 #SBATCH --exclusive
 #SBATCH -C bw
