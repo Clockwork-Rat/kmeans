@@ -12,28 +12,28 @@
 
 module load openmpi
 
-mpicc -O3 ~/cs552/kmeans/kmeans_act1_raspet.c -lm -o ~/out_act1_1
+mpicc -O3 ~/cs552/kmeans/kmeans_act1_raspet.c -lm -o ~/out_act1_6
 
-srun ~/out_act1_1 5159737 2 2 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 2 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 25 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 25 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 50 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 50 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 100 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 100 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 2 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 2 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 25 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 25 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 50 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 50 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 100 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 100 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 2 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 2 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 25 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 25 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 50 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 50 ~/iono_57min_5.16Mpts_2D.txt
 
-srun ~/out_act1_1 5159737 2 100 ~/iono_57min_5.16Mpts_2D.txt
+srun ~/out_act1_6 5159737 2 100 ~/iono_57min_5.16Mpts_2D.txt
