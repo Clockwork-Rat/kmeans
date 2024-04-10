@@ -165,8 +165,9 @@ int main(int argc, char **argv) {
           for(int d = 0; d < DIM - 1; ++d) {
             printf("%f, ", means[i][d]);
           }
-          printf("%f\n", means[i][DIM - 1]);
+          printf("%f;", means[i][DIM - 1]);
         }
+        printf("\n");
     }
     // allreduce
     // get total sum of counts
