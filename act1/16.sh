@@ -2,8 +2,8 @@
 #SBATCH --job-name=kmeans-1-5
 #SBATCH --output=/home/ijr44/cs552/a5/act1/run5.txt
 #SBATCH --error=/home/ijr44/cs552/a5/act1/run5.err
-#SBATCH --time=100:00
-#SBATCH --mem=100G
+#SBATCH --time=10:00
+#SBATCH --mem=20G
 #SBATCH --nodes=1
 #SBATCH --ntasks=16
 #SBATCH --cpus-per-task=1
