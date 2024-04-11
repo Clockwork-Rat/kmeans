@@ -186,7 +186,10 @@ int main(int argc, char **argv) {
         // iterate through points and average them all this should be done at rank zero only for all points
         for (size_t i = 0; i < KMEANS; ++i) {
           for (size_t d = 0; d < DIM; ++d) {
-            means[i][d] = total_sums[i][d] / (double)total_counts[i];
+            means[i][d] = total_sums[i][d] / (double)total_counts[i]; // check for nan and set to zero if nan
+            if (means[i][d] != means[i][d]) {
+              means[i][d] = 0.0;
+            }
           }
         }
       } else {
